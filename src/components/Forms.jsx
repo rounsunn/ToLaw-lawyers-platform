@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import client from "../api";
 
 function FormComponent() {
@@ -19,7 +20,8 @@ function FormComponent() {
     mobileNumber: "",
     profilePic: null,
   });
-
+  const navigate = useNavigate();
+  
   const [fileErrors, setFileErrors] = useState({
     lawCertificate: "",
     profilePic: "",
@@ -90,18 +92,46 @@ function FormComponent() {
 
   async function post(url, formData) {
     const response = await client.post(url, formData);
-    console.log(response.data);
+    console.log(response?.data);
+    const id = response?.data?._id;
+    navigate(`/${id}`);
   }
 
-  const handleSubmit = (e) => {
+  async function upload(file) {
+    const {url} = await fetch("http://127.0.0.1:5000/s3Url").then(res => res.json());
+    console.log(url)
+
+    await fetch(url, {
+      method:"PUT",
+      headers: {
+        "Content-Type":file.type,
+      },
+      body: file
+    })
+
+    const imageUrl = url.split('?')[0]
+    console.log(imageUrl)
+    return imageUrl
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // Send a POST request to your server route
-      const newLawyer = { ...formData };
+      let newLawyer = { ...formData };
       console.log(newLawyer);
-      const response = post("/lawyers", newLawyer);
+      console.log(formData.profilePic)
+
+      if (fileErrors.lawCertificate || fileErrors.profilePic) {
+        console.error("File upload errors. Please fix them before submitting.");
+        return;
+      }
+      const profilPicImageUrl = await upload(formData.profilePic)
+      newLawyer.profilePic = profilPicImageUrl
+
+      const response = await post("/lawyers", newLawyer);
       // Handle the response as needed
-      console.log("Server response:", response.data);
+      // console.log("Server response:", response?.data);
 
       // Reset the form after successful submission
       setFormData({
@@ -121,7 +151,6 @@ function FormComponent() {
         mobileNumber: "",
         profilePic: null,
       });
-      // navigate("/");
     } catch (error) {
       // Handle any errors here
       console.error("Error:", error);
@@ -132,7 +161,7 @@ function FormComponent() {
   const lawOptions = ["Corporate", "Property", "Family", "Tax", "Criminal"];
 
   return (
-    <div className="container mt-5">
+    <div className="container my-5">
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="fullName" className="form-label">
@@ -146,6 +175,7 @@ function FormComponent() {
             placeholder="Padmajan Jayakumar"
             value={formData.fullName}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -186,6 +216,7 @@ function FormComponent() {
             placeholder="K/0028**/20**"
             value={formData.barCouncilNumber}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -215,6 +246,7 @@ function FormComponent() {
             placeholder="e.g., 2 years" //
             value={formData.experience}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -230,6 +262,7 @@ function FormComponent() {
             placeholder="English, Hindi, Kanada"
             value={formData.languages}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -261,6 +294,7 @@ function FormComponent() {
             name="charges"
             value={formData.charges}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -275,6 +309,7 @@ function FormComponent() {
             name="consultingDuration"
             value={formData.consultingDuration}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -335,6 +370,7 @@ function FormComponent() {
             name="emailId"
             value={formData.emailId}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -349,6 +385,7 @@ function FormComponent() {
             name="mobileNumber"
             value={formData.mobileNumber}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -369,7 +406,7 @@ function FormComponent() {
           )}
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-100">
           Submit
         </button>
       </form>

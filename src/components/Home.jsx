@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useUserAuth } from "../context/UserAuthContext";
-import FormComponent from "./Form";
+import FormComponent from "./Forms";
 
 const Home = () => {
   const { logOut, user } = useUserAuth();
@@ -15,18 +15,20 @@ const Home = () => {
       console.log(error.message);
     }
   };
+  console.log(user);
+
   return (
     <div className="container mt-5">
-      <div className="p-2 mt-2 text-center">
-        Hello Welcome <br />
-        {user && user.email}
-      </div>
-      <FormComponent />
-      <div className="d-grid m-2">
-        <Button variant="primary" onClick={handleLogout}>
+      <div className="d-flex justify-content-between align-items-center p-2 mt-2">
+        <div className=" text-center">
+          Hello & Welcome <br />
+          <p className="fw-bold">{user && user.displayName}</p>
+        </div>
+        <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleLogout}>
           Log out
         </Button>
       </div>
+      <FormComponent />
     </div>
   );
 };

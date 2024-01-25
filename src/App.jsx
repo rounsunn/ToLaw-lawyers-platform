@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import SignUp from "./components/SignUp";
+import Signup from "./components/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
-import PhoneLogin from "./components/PhoneLogin";
+import PhoneSignUP from "./components/PhoneSignUP";
+import Profile from "./components/Profile";
+import Edit from "./components/Edit";
 
 function App() {
   return (
@@ -22,8 +24,24 @@ function App() {
             }
           />
           <Route path="/" element={<Login />} />
-          <Route path="/phonelogin" element={<PhoneLogin />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/phonesignup" element={<PhoneSignUP />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+              path="/:id"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <Edit />
+                </ProtectedRoute>
+              }
+            />
         </Routes>
       </Router>
     </UserAuthContextProvider>

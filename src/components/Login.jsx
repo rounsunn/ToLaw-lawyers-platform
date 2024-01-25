@@ -11,6 +11,13 @@ const Login = () => {
   const [error, setError] = useState("");
   const { logIn, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
+  
+  // GET LAWYERS API
+  const getUsers = async () => {
+    const response = await fetch('/lawyers');
+    const data = await response.json();
+    return data;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +43,7 @@ const Login = () => {
   return (
     <>
       <div className="p-4 box">
-        <h2 className="mb-3">ToLaw-Lawyers</h2>
+        <h2 className="mb-3 text-3xl font-semibold">CoLawab-Lawyers</h2>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -55,13 +62,13 @@ const Login = () => {
             />
           </Form.Group>
 
-          <div className="d-grid gap-2">
+          <div className="d-grid gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded mb-4">
             <Button variant="primary" type="Submit">
               Log In
             </Button>
           </div>
         </Form>
-        <hr />
+        <div className="w-full h-[1px] bg-gray-200 mb-4" />
         <div>
           <GoogleButton
             className="g-btn"
@@ -69,8 +76,8 @@ const Login = () => {
             onClick={handleGoogleSignIn}
           />
         </div>
-        <Link to="/phonelogin" style={{ textDecoration: "none" }}>
-          <div className="d-grid gap-2 mt-3">
+        <Link to="/phonesignup" style={{ textDecoration: "none" }}>
+          <div className="d-grid gap-2 mt-3 bg-green-500 hover:bg-green-700 text-white rounded">
             <Button variant="success" type="Submit">
               Sign in with Phone
             </Button>
