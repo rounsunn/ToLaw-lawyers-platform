@@ -9,22 +9,30 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { logIn, googleSignIn } = useUserAuth();
+  const { logIn, googleSignIn, user: currentUser } = useUserAuth();
   const navigate = useNavigate();
   
   // GET LAWYERS API
   const getUsers = async () => {
-    const response = await fetch('/lawyers');
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetch('http://localhost:5000/lawyers');
+      if(response.ok){
+        const data = await response.json();
+        return data;
+      } else {
+        console.log("something is wrong")
+      }
+    } catch(err) {
+      console.log("error", err)
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      await logIn(email, password);
-      navigate("/home");
+      const response =  await logIn(email, password);
+      await navigateToCorrectPage(response.user.email);
     } catch (err) {
       setError(err.message);
     }
@@ -33,10 +41,31 @@ const Login = () => {
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
-      await googleSignIn();
-      navigate("/home");
+      const response = await googleSignIn();
+      await navigateToCorrectPage(response.user.email);
     } catch (error) {
       console.log(error.message);
+    }
+  };  
+
+  const navigateToCorrectPage = async (userEmail) => {
+    try {
+      const lawyers = await getUsers();
+  
+      let foundMatch = false;
+  
+      for (let i = 0; i < lawyers.length; i++) {
+        if (lawyers[i]?.emailId === userEmail) {
+          foundMatch = true;
+          navigate(`/${lawyers[i]._id}`);
+          break;
+        }
+      }
+      if (!foundMatch) {
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error("Error fetching lawyer data:", error);
     }
   };
 
