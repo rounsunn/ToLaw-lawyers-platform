@@ -27,6 +27,7 @@ const PhoneSignUp = () => {
       setResult(response);
       setFlag(true);
     } catch (err) {
+      console.log("e", err)
       setError(err.message);
     }
   };
@@ -81,14 +82,18 @@ const PhoneSignUp = () => {
               onChange={(e) => setOtp(e.target.value)}
             />
           </Form.Group>
-          <div className="button-right">
-            <Link to="/">
-              <Button variant="secondary">Cancel</Button>
-            </Link>
+          <div className="button-right flex gap-3 w-full justify-evenly">
+            <div className="d-grid gap-2 bg-gray-500 text-white font-bold rounded mb-4">
+              <Link to="/">
+                  <Button variant="secondary">Cancel</Button>
+              </Link>
+            </div>
             &nbsp;
-            <Button type="submit" variant="primary">
-              Verify
-            </Button>
+            <div className="d-grid gap-2 bg-blue-500 text-white font-bold rounded mb-4">
+              <Button type="submit" variant="primary">
+                Verify
+              </Button>
+            </div>
           </div>
         </Form>
       </div>

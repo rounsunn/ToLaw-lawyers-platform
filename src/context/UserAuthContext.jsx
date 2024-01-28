@@ -33,9 +33,9 @@ export function UserAuthContextProvider({ children }) {
   function setUpRecaptha(number) {
     console.log("setUp recaptch called: ");
     const recaptchaVerifier = new RecaptchaVerifier(
+      auth,
       "recaptcha-container",
       {},
-      auth
     );
     console.log("recaptch till good");
     recaptchaVerifier.render();
