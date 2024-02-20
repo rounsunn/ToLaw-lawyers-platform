@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import client from "../api";
 
 function FormComponent() {
@@ -21,7 +21,7 @@ function FormComponent() {
     profilePic: null,
   });
   const navigate = useNavigate();
-  
+
   const [fileErrors, setFileErrors] = useState({
     lawCertificate: "",
     profilePic: "",
@@ -98,20 +98,22 @@ function FormComponent() {
   }
 
   async function upload(file) {
-    const {url} = await fetch("http://127.0.0.1:5000/s3Url").then(res => res.json());
-    console.log(url)
+    const { url } = await fetch("http://127.0.0.1:5000/s3Url").then((res) =>
+      res.json()
+    );
+    console.log(url);
 
     await fetch(url, {
-      method:"PUT",
+      method: "PUT",
       headers: {
-        "Content-Type":file.type,
+        "Content-Type": file.type,
       },
-      body: file
-    })
+      body: file,
+    });
 
-    const imageUrl = url.split('?')[0]
-    console.log(imageUrl)
-    return imageUrl
+    const imageUrl = url.split("?")[0];
+    console.log(imageUrl);
+    return imageUrl;
   }
 
   const handleSubmit = async (e) => {
@@ -120,14 +122,14 @@ function FormComponent() {
       // Send a POST request to your server route
       let newLawyer = { ...formData };
       console.log(newLawyer);
-      console.log(formData.profilePic)
+      console.log(formData.profilePic);
 
       if (fileErrors.lawCertificate || fileErrors.profilePic) {
         console.error("File upload errors. Please fix them before submitting.");
         return;
       }
-      const profilPicImageUrl = await upload(formData.profilePic)
-      newLawyer.profilePic = profilPicImageUrl
+      const profilPicImageUrl = await upload(formData.profilePic);
+      newLawyer.profilePic = profilPicImageUrl;
 
       const response = await post("/lawyers", newLawyer);
       // Handle the response as needed
@@ -172,7 +174,7 @@ function FormComponent() {
             className="form-control"
             id="fullName"
             name="fullName"
-            placeholder="Padmajan Jayakumar"
+            placeholder="Advocate Vishal Vikram Rana"
             value={formData.fullName}
             onChange={handleChange}
             required
@@ -213,7 +215,7 @@ function FormComponent() {
             className="form-control"
             id="barCouncilNumber"
             name="barCouncilNumber"
-            placeholder="K/0028**/20**"
+            placeholder="BR/19**/20**"
             value={formData.barCouncilNumber}
             onChange={handleChange}
             required
@@ -229,7 +231,7 @@ function FormComponent() {
             className="form-control"
             id="region"
             name="region"
-            placeholder="Bangalore"
+            placeholder="Patna"
             value={formData.region}
             onChange={handleChange}
           />
@@ -243,7 +245,7 @@ function FormComponent() {
             className="form-control"
             id="experience"
             name="experience"
-            placeholder="e.g., 2 years" //
+            placeholder="2" //
             value={formData.experience}
             onChange={handleChange}
             required
@@ -285,7 +287,7 @@ function FormComponent() {
 
         <div className="mb-3">
           <label htmlFor="charges" className="form-label">
-            Charge per hour (in rupees)
+            Charge (in rupees)
           </label>
           <input
             type="number"
@@ -355,6 +357,9 @@ function FormComponent() {
             name="biography"
             rows="4"
             value={formData.biography}
+            placeholder="Advocate Vishal Vikram Rana completed his law in the year 2016 and has been providing services in various fields of law, that is, Labour & Service, Family, Divorce, Child Custody, Consumer Court and drafting and vetting of various agreements and documents.
+
+Advocate Vishal enrolled with the Bar Council of Bihar in 2016. He is a member of the Patna High Court Bar Association."
             onChange={handleChange}
           ></textarea>
         </div>
@@ -369,6 +374,7 @@ function FormComponent() {
             id="emailId"
             name="emailId"
             value={formData.emailId}
+            placeholder="vi***@gmail.com"
             onChange={handleChange}
             required
           />
@@ -384,6 +390,7 @@ function FormComponent() {
             id="mobileNumber"
             name="mobileNumber"
             value={formData.mobileNumber}
+            placeholder="911***27**"
             onChange={handleChange}
             required
           />
@@ -406,7 +413,10 @@ function FormComponent() {
           )}
         </div>
 
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-100">
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-100"
+        >
           Submit
         </button>
       </form>
