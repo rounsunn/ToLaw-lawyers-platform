@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import Signup from "./components/Signup";
+import Signup from "./components/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import PhoneSignUP from "./components/PhoneSignUP";
@@ -27,21 +27,21 @@ function App() {
           <Route path="/phonesignup" element={<PhoneSignUP />} />
           <Route path="/signup" element={<Signup />} />
           <Route
-              path="/:id"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/edit/:id"
-              element={
-                <ProtectedRoute>
-                  <Edit />
-                </ProtectedRoute>
-              }
-            />
+            path="/:id"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit/:id"
+            element={
+              <ProtectedRoute>
+                <Edit />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </UserAuthContextProvider>
